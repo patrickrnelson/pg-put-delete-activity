@@ -10,6 +10,8 @@ function addClickHandlers() {
   // TODO - Add code for edit & delete buttons
   $(document).on('click', '#statusBtn', onStatusClick);
   $(document).on('click', '#deleteBtn', onDeleteClick);
+  // STRETCH - listener for edit buttoin
+  $(document).on('click', '#editBtn', onEditClick);
 }
 
 function handleSubmit() {
@@ -65,6 +67,7 @@ function renderBooks(books) {
         <td>${book.author}</td>
         <td class="isReadStatus">${book.isRead}</td>
         <td><button id="statusBtn" data-id="${book.id}">Change Status</button></td>
+        <td><button id="editBtn" data-title="${book.title}" data-author="${book.author}" data-id="${book.id}">Edit</button></td>
         <td><button id="deleteBtn" data-id="${book.id}">DELETE</button></td>
       </tr>
     `);
@@ -120,4 +123,25 @@ function onDeleteClick() {
   console.log('Delete Click');
   let thisBookID = $(this).data('id');
   deleteBook(thisBookID);
+}
+
+// ***STRETCH***
+
+editBookID = 0;
+
+function onEditClick() {
+  console.log('edit click');
+  let thisBookTitle = $(this).data('title');
+  let thisBookAuthor = $(this).data('author');
+  let thisBookID = $(this).data('id');
+  editBookID = thisBookID;
+
+  function editView() {
+    $('#addEditTitle').empty();
+    $('#addEditTitle').append('Edit Book');
+    $('#addEditSection').css('background-color', 'pink');
+    $('#author').val(thisBookAuthor);
+    $('#title').val(thisBookTitle);
+  }
+  editView();
 }
