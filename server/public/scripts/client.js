@@ -101,6 +101,23 @@ function onStatusClick() {
   changeReadStatus(thisBookID, currentStatus);
 }
 
+function deleteBook(bookID) {
+  $.ajax({
+    method: 'DELETE',
+    url: `/books/${bookID}`,
+  })
+    .then(function (response) {
+      // refresh book data
+      refreshBooks();
+    })
+    .catch(function (err) {
+      console.log('error', err);
+      alert('ERROR');
+    });
+}
+
 function onDeleteClick() {
   console.log('Delete Click');
+  let thisBookID = $(this).data('id');
+  deleteBook(thisBookID);
 }
