@@ -24,6 +24,10 @@ section {
   margin-bottom: 1em;
 }
 
+.edit-section {
+  background-color: pink;
+}
+
 th {
   text-align: center;
 }

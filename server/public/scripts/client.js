@@ -137,9 +137,27 @@ function onEditClick() {
   editBookID = thisBookID;
 
   function editView() {
+    // empty the 'Add new Book' title
+    // append 'Edit book' instead
     $('#addEditTitle').empty();
     $('#addEditTitle').append('Edit Book');
-    $('#addEditSection').css('background-color', 'pink');
+    // change the background color of the section to indicate the change
+    $('#addEditSection').addClass('edit-section');
+    // append a cancel button
+    $('#addEditSection').append(
+      `<button type="button" id="cancelEditBtn">Cancel</button>`
+    );
+    // cancel button listener
+    $('#cancelEditBtn').on('click', function () {
+      // switch everything back to normal on cancel
+      $('#addEditTitle').empty();
+      $('#addEditTitle').append('Add New Book');
+      $('#addEditSection').removeClass('edit-section');
+      $('#author').val('');
+      $('#title').val('');
+      $(this).remove();
+    });
+    // fill the inputs with the desired info to edit
     $('#author').val(thisBookAuthor);
     $('#title').val(thisBookTitle);
   }
