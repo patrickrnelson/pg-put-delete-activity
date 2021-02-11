@@ -10,6 +10,8 @@ function addClickHandlers() {
   // TODO - Add code for edit & delete buttons
   $(document).on('click', '#statusBtn', onStatusClick);
   $(document).on('click', '#deleteBtn', onDeleteClick);
+  // STRETCH - listener for edit buttoin
+  $(document).on('click', '#editBtn', onEditClick);
 }
 
 function handleSubmit() {
@@ -65,6 +67,7 @@ function renderBooks(books) {
         <td>${book.author}</td>
         <td class="isReadStatus">${book.isRead}</td>
         <td><button id="statusBtn" data-id="${book.id}">Change Status</button></td>
+        <td><button id="editBtn" data-title="${book.title}" data-author="${book.author}" data-id="${book.id}">Edit</button></td>
         <td><button id="deleteBtn" data-id="${book.id}">DELETE</button></td>
       </tr>
     `);
@@ -120,4 +123,74 @@ function onDeleteClick() {
   console.log('Delete Click');
   let thisBookID = $(this).data('id');
   deleteBook(thisBookID);
+}
+
+// ***STRETCH***
+
+editBookID = 0;
+
+function onEditClick() {
+  console.log('edit click');
+  let thisBookTitle = $(this).data('title');
+  let thisBookAuthor = $(this).data('author');
+  let thisBookID = $(this).data('id');
+  editBookID = thisBookID;
+
+  // listen for a submit click
+  $('#submitBtn').on('click', onEditSubmit);
+
+  function editView() {
+    // empty the 'Add new Book' title
+    // append 'Edit book' instead
+    $('#addEditTitle').empty();
+    $('#addEditTitle').append('Edit Book');
+    // change the background color of the section to indicate the change
+    $('#addEditSection').addClass('edit-section');
+    // append a cancel button
+    $('#addEditSection').append(
+      `<button type="button" id="cancelEditBtn">Cancel</button>`
+    );
+    // cancel button listener
+    $('#cancelEditBtn').on('click', function () {
+      // switch everything back to normal on cancel
+      $('#addEditTitle').empty();
+      $('#addEditTitle').append('Add New Book');
+      $('#addEditSection').removeClass('edit-section');
+      $('#author').val('');
+      $('#title').val('');
+      $(this).remove();
+    });
+    // fill the inputs with the desired info to edit
+    $('#author').val(thisBookAuthor);
+    $('#title').val(thisBookTitle);
+  }
+
+  function editBook(bookID) {
+    let bookTitle = $('#title').val();
+    let bookAuthor = $('#author').val();
+    $.ajax({
+      method: 'PUT',
+      // need the book ID in the url
+      // can grab with data-id
+      // will get with the click handler
+      url: `/books/edit/${bookID}`,
+      data: {
+        author: bookAuthor,
+        title: bookTitle,
+      },
+    })
+      .then(function (response) {
+        refreshBooks();
+      })
+      .catch(function (err) {
+        console.log('error', err);
+        alert('Error! Try again later');
+      });
+  }
+  function onEditSubmit() {
+    editBook(editBookID);
+    $('#author').val('');
+    $('#title').val('');
+  }
+  editView();
 }
