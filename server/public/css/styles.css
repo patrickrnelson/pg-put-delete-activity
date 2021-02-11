@@ -20,12 +20,14 @@ main {
 
 section {
   background-color: linen;
-  padding: .5em;
+  padding: 0.5em;
   margin-bottom: 1em;
 }
 
 th {
-  text-align: left;
+  text-align: center;
 }
 
-
+.wordie {
+  width: 35%;
+}
