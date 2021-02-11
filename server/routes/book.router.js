@@ -79,6 +79,45 @@ router.put('/isRead/:id', (req, res) => {
     });
 });
 
+// STRETCH edit PUT
+router.put('/edit/:id', (req, res) => {
+  console.log('req.body', req.body);
+  console.log('req.params', req.params);
+  let bookID = req.params.id;
+
+  // Current Status will come from the request body
+  // Expected to be true or false
+
+  let author = req.body.author;
+  let title = req.body.title;
+  let sqlText = ``;
+
+  if (bookID > 0) {
+    // if we receive a currentStatus that = 'false'
+    // set the isRead column to True
+    sqlText = `UPDATE books 
+    SET "author"='${author}',
+        "title"='${title}'
+    WHERE id=$1`;
+  } else {
+    // If we don't get an expected direction, send back bad status
+    console.log('Whoops');
+    res.sendStatus(500);
+    return; // Do it now, doesn't run the next set of code
+  }
+
+  pool
+    .query(sqlText, [bookID])
+    .then((dbRes) => {
+      console.log(dbRes);
+      res.sendStatus(200);
+    })
+    .catch((err) => {
+      console.log('error', err);
+      res.sendStatus(500);
+    });
+});
+
 // TODO - DELETE
 // Removes a book to show that it has been read
 // Request must include a parameter indicating what book to update - the id

@@ -136,6 +136,9 @@ function onEditClick() {
   let thisBookID = $(this).data('id');
   editBookID = thisBookID;
 
+  // listen for a submit click
+  $('#submitBtn').on('click', onEditSubmit);
+
   function editView() {
     // empty the 'Add new Book' title
     // append 'Edit book' instead
@@ -160,6 +163,34 @@ function onEditClick() {
     // fill the inputs with the desired info to edit
     $('#author').val(thisBookAuthor);
     $('#title').val(thisBookTitle);
+  }
+
+  function editBook(bookID) {
+    let bookTitle = $('#title').val();
+    let bookAuthor = $('#author').val();
+    $.ajax({
+      method: 'PUT',
+      // need the book ID in the url
+      // can grab with data-id
+      // will get with the click handler
+      url: `/books/edit/${bookID}`,
+      data: {
+        author: bookAuthor,
+        title: bookTitle,
+      },
+    })
+      .then(function (response) {
+        refreshBooks();
+      })
+      .catch(function (err) {
+        console.log('error', err);
+        alert('Error! Try again later');
+      });
+  }
+  function onEditSubmit() {
+    editBook(editBookID);
+    $('#author').val('');
+    $('#title').val('');
   }
   editView();
 }
